@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #705798;
+    height: 100vh
+}
+
+h1 {
+    font-family: "Gloria Hallelujah", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #A8F9CA;
+    transform: rotate(4deg);
+}
+
+.border {
+    background-color: #F9FFB4;
+}
+
+#gameBoard {
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr; 
+    gap: 5px;
+    transform: rotate(-1deg);
+}
+
+.square {
+    font-family: "Life Savers", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 208px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    padding: 30px;
+    background-color: #705798;
+}
+
+.circle {
+    width: 100px;
+}
+.cross {
+    width: 120px;
+}
