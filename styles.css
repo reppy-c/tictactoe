@@ -11,9 +11,11 @@ body {
 h1 {
     font-family: "Gloria Hallelujah", serif;
     font-weight: 400;
+    font-size: 50px;
     font-style: normal;
     color: #A8F9CA;
     transform: rotate(4deg);
+    margin-top:-50px;
 }
 
 .border {
