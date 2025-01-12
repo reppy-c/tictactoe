@@ -2,7 +2,7 @@
 function createGame() {
 
     // Array to track gamestate
-    let gameState = [[{},{},{}],[{},{},{}],[{},{},{}]];
+    let gameState = [[null,null,null],[null,null,null],[null,null,null]];
 
     // Track number of moves, if this hits 9 with no winner, its a tie
     let noOfMoves = 0;
@@ -71,15 +71,24 @@ function createPlayer(name, className) {
 
 function createController(game) {
 
-    const dom_gameBoard = document.querySelector('#gameBoard');
+    const dom_squares = document.querySelectorAll('.square');
 
     // Renders current gamestate to board
     function renderGame() {
-        game.getGameState().forEach((row, rowIndex) => {
-            row.forEach((col, colIndex) => {
-                if(game[rowIndex][colIndex] != null) {
 
+        let i = 0; // Since squares in HTML are in a flat array, we check which
+
+        // Iterate through each row of the gamestate
+        game.getGameState().forEach((row, rowIndex) => {
+            row.forEach((col, colIndex) => {       
+                
+                let squareState = game.getGameState()[rowIndex][colIndex];
+
+                if(squareState != null) {
+                   dom_squares[i].classList.add(squareState.getClassName());
                 }
+
+                i++;
             });
         });
     }
@@ -102,18 +111,20 @@ const main = (function () {
     const player1 = createPlayer("rachel", "circle");
     const player2 = createPlayer("clara", "cross");
 
-    //controller.clearBoard();
-    controller.renderGame();
+
+    //controller.renderGame();
 
     // do while here alternating players
-    console.log(game.move(player1,0,0));
-    console.log(game.move(player1,0,2));
-    console.log(game.move(player1,0,1));
+    console.log("move: " + game.move(player2,0,0));
+    console.log("move: " + game.move(player2,0,2));
+    console.log("move: " + game.move(player1,0,1));
+
+    controller.renderGame();
 
     // after the loop, result should have non null.. either a player or -1 for too many moves
     let result = player1;
 
     // when winner is assigned to winner
-    console.log("the winner is: " + player1.getName() + "!");
+    console.log("the winner is: " + result.getName() + "!");
 
 })();
