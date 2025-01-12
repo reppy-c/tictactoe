@@ -88,19 +88,18 @@ function createController(game, player1, player2) {
         if (e.type == 'mousedown') {
 
             let moveResult = game.move(currentPlayerTurn, this.dataset.row, this.dataset.col);
+            console.log("move result is: " + moveResult);
+            renderGame();
 
-            if(moveResult != null) {
-                // There's a winner
-                
+            if(moveResult == -1) {
+                console.log("maxed moves");
+            } else if(moveResult != null) { // There's a winner}            
                 removeEvents(); // Remove all square event handers
                 showWinner(moveResult); // Display winner banner
-
-            } else {
-                // No winner, move onto next turn, change player
+            } else { // No winner, move onto next turn, change player
                 nextTurn();
-                
             }
-            renderGame();
+            
         }    
     }
 
