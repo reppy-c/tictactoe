@@ -18,7 +18,7 @@ function createGame() {
     // Let the front-end handle error handling (not ideal, but quicker)
     // Returns player if there's a winner
     function move(player, x, y) {
-        
+
         noOfMoves++;
         gameState[x][y] = player;
 
@@ -69,9 +69,34 @@ function createPlayer(name, className) {
     return {getName, getClassName};    
 }
 
-function createController(game) {
+
+function createController(game, player1, player2) {
 
     const dom_squares = document.querySelectorAll('.square');
+    let currentPlayerTurn = player1;
+
+    // Handles event mousedown, passes players and coordinates to the game object
+    function tryMove(e) {
+        if (e.type == 'mousedown') {
+
+            if(game.move(currentPlayerTurn, this.dataset.row, this.dataset.col) != null) {
+                // There's a winner
+                
+            } else {
+                // No winner, move onto next turn, change player
+                nextTurn();
+                
+            }
+            renderGame();
+        }    
+    }
+
+    // Attach event handlers to each square in DOM, this is an IIFE, runs when controller is created
+    const attachEvents = (function () {
+        dom_squares.forEach((square) => {
+            square.addEventListener("mousedown", tryMove);
+        });
+    })();
 
     // Renders current gamestate to board
     function renderGame() {
@@ -86,11 +111,14 @@ function createController(game) {
 
                 if(squareState != null) {
                    dom_squares[i].classList.add(squareState.getClassName());
+                   dom_squares[i].removeEventListener("mousedown", tryMove);
                 }
 
                 i++;
             });
         });
+
+    return {tryMove};
     }
 
     // Changes background of the winning line
@@ -98,33 +126,25 @@ function createController(game) {
         // how to do this without hardcoding the squares??
     }
     
-    return{renderGame, highlightWinningLine};
+    // Toggle the next player
+    function nextTurn() {
+        if(currentPlayerTurn == player1) {
+            currentPlayerTurn = player2;
+        } else {
+            currentPlayerTurn = player1;
+        }
+    }
+
+    return{nextTurn, attachEvents, renderGame, highlightWinningLine};
 }
 
 // This is an IIFE, basically the main loop
 const main = (function () {
 
-    // Creating an instance from the createGame factory function
+    // INITIATE GAME
     const game = createGame();
-    const controller = createController(game);
-
     const player1 = createPlayer("rachel", "circle");
     const player2 = createPlayer("clara", "cross");
-
-
-    //controller.renderGame();
-
-    // do while here alternating players
-    console.log("move: " + game.move(player2,0,0));
-    console.log("move: " + game.move(player2,0,2));
-    console.log("move: " + game.move(player1,0,1));
-
-    controller.renderGame();
-
-    // after the loop, result should have non null.. either a player or -1 for too many moves
-    let result = player1;
-
-    // when winner is assigned to winner
-    console.log("the winner is: " + result.getName() + "!");
-
+    const controller = createController(game, player1, player2);
+    
 })();
