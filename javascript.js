@@ -69,18 +69,18 @@ function createPlayer(name, className) {
     return {getName, getClassName};    
 }
 
-function createController(game, player1, player2) {
+function createController(player1, player2) {
 
+    let game = createGame();
+    let currentPlayerTurn;
+    let banner = document.querySelector('#winnerBanner');
     const dom_squares = document.querySelectorAll('.square');
-    let currentPlayerTurn = player1;
-
+    
     // Show winner banner
     function showWinner(winningPlayer) {
-        let banner = document.querySelector('#winnerBanner');
         let winnerName = document.querySelector('#winnerName');
         banner.style.display = 'flex';
         winnerName.innerHTML = winningPlayer.getName(); 
-
     }
 
     // Handles event mousedown, passes players and coordinates to the game object
@@ -88,7 +88,6 @@ function createController(game, player1, player2) {
         if (e.type == 'mousedown') {
 
             let moveResult = game.move(currentPlayerTurn, this.dataset.row, this.dataset.col);
-            console.log("move result is: " + moveResult);
             renderGame();
 
             if(moveResult == -1) {
@@ -99,16 +98,15 @@ function createController(game, player1, player2) {
             } else { // No winner, move onto next turn, change player
                 nextTurn();
             }
-            
         }    
     }
 
     // Attach event handlers to each square in DOM, this is an IIFE, runs when controller is created
-    const attachEvents = (function () {
+    function attachEvents() {
         dom_squares.forEach((square) => {
             square.addEventListener("mousedown", tryMove);
         });
-    })();
+    }
 
     function removeEvents() {
         dom_squares.forEach((square) => {
@@ -135,8 +133,6 @@ function createController(game, player1, player2) {
                 i++;
             });
         });
-
-    return {tryMove};
     }
 
     // Changes background of the winning line
@@ -153,16 +149,46 @@ function createController(game, player1, player2) {
         }
     }
 
-    return{nextTurn, attachEvents, renderGame, highlightWinningLine};
+    // Reset the game objects and DOM
+    function resetGame() {
+        
+        // Remove remaining events from squares and add to every square
+        removeEvents();
+        attachEvents();
+
+        // Create a new game instance
+        game = createGame();
+
+        // Remove existing Xs and Os        
+        dom_squares.forEach((square) => {
+            square.classList.remove("circle", "cross");
+        });
+
+        // Hide winning banner
+        banner.style.display = 'none';
+
+        // Set turn to player 1 again
+        currentPlayerTurn = player1;
+
+        renderGame();
+    }
+    
+
+    return{tryMove, resetGame, nextTurn, attachEvents, renderGame, highlightWinningLine};
 }
 
 // This is an IIFE, basically the main loop
 const main = (function () {
 
     // INITIATE GAME
-    const game = createGame();
-    const player1 = createPlayer("rachel", "circle");
-    const player2 = createPlayer("clara", "cross");
-    const controller = createController(game, player1, player2);
+    const player1 = createPlayer("Player 1", "circle");
+    const player2 = createPlayer("Player 2", "cross");
+    const controller = createController(player1, player2);
     
+    let resetButton = document.querySelector('#reset');
+    resetButton.addEventListener("mousedown", controller.resetGame);
+
+    controller.resetGame();
+
+    //console.log(controller.resetGame());
 })();
