@@ -15,7 +15,7 @@ h1 {
     font-style: normal;
     color: #A8F9CA;
     transform: rotate(4deg);
-    margin-top:-50px;
+    margin-top:-100px;
 }
 
 .border {
@@ -54,4 +54,26 @@ h1 {
     background-image: url("cross.svg");
     background-repeat: no-repeat;
     background-position: center;
+}
+
+#winnerBanner {
+    width:600px;
+    height:300px;
+    position: absolute;
+    background-color: #F9FFB4;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Life Savers", serif;
+    font-weight: 600;
+    font-style: normal;
+    color: #705798;
+    font-size: 80px;
+    transform: rotate(-2deg);
+    box-shadow: 0px 4px 16.5px 14px rgba(0, 0, 0, 0.18);
+}
+
+#winnerName {
+    color: #F8B7CA;
 }

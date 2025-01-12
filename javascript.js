@@ -69,19 +69,32 @@ function createPlayer(name, className) {
     return {getName, getClassName};    
 }
 
-
 function createController(game, player1, player2) {
 
     const dom_squares = document.querySelectorAll('.square');
     let currentPlayerTurn = player1;
 
+    // Show winner banner
+    function showWinner(winningPlayer) {
+        let banner = document.querySelector('#winnerBanner');
+        let winnerName = document.querySelector('#winnerName');
+        banner.style.display = 'flex';
+        winnerName.innerHTML = winningPlayer.getName(); 
+
+    }
+
     // Handles event mousedown, passes players and coordinates to the game object
     function tryMove(e) {
         if (e.type == 'mousedown') {
 
-            if(game.move(currentPlayerTurn, this.dataset.row, this.dataset.col) != null) {
+            let moveResult = game.move(currentPlayerTurn, this.dataset.row, this.dataset.col);
+
+            if(moveResult != null) {
                 // There's a winner
                 
+                removeEvents(); // Remove all square event handers
+                showWinner(moveResult); // Display winner banner
+
             } else {
                 // No winner, move onto next turn, change player
                 nextTurn();
@@ -97,6 +110,12 @@ function createController(game, player1, player2) {
             square.addEventListener("mousedown", tryMove);
         });
     })();
+
+    function removeEvents() {
+        dom_squares.forEach((square) => {
+            square.removeEventListener("mousedown", tryMove);
+        });
+    }
 
     // Renders current gamestate to board
     function renderGame() {
@@ -123,7 +142,7 @@ function createController(game, player1, player2) {
 
     // Changes background of the winning line
     function highlightWinningLine() {
-        // how to do this without hardcoding the squares??
+        // how to do this without hardcoding the lines??
     }
     
     // Toggle the next player
